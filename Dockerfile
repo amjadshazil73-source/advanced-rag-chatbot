@@ -23,6 +23,9 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu && \
     pip install --no-cache-dir -r requirements.txt
 
+# Post-install: Warm up models to bake them into the image
+RUN python warmup.py
+
 # Copy the entire project
 # This includes 'qdrant_storage' for our baked-in showcase data
 COPY . .

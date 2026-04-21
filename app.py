@@ -105,8 +105,9 @@ st.title("Advanced RAG Assistant")
 
 # Heartbeat check
 if not check_api_health():
-    st.warning("🔄 System is initializing (loading AI models)... Please wait a moment.")
-    time.sleep(3)
+    st.info("🔄 System is waking up (loading baked-in AI models)...")
+    st.caption("This usually takes 10-15 seconds on the first visit.")
+    time.sleep(5)
     st.rerun()
 
 st.caption("Production pipeline with Hybrid Search + Reranking + Gemini 1.5")
