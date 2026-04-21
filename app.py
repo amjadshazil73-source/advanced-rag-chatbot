@@ -13,6 +13,14 @@ st.set_page_config(
     layout="wide"
 )
 
+def check_api_health():
+    """Checks if the FastAPI backend is responsive."""
+    try:
+        response = httpx.get(f"{API_URL}/health", timeout=2.0)
+        return response.status_code == 200
+    except:
+        return False
+
 # --- STYLING ---
 st.markdown("""
 <style>
@@ -94,6 +102,13 @@ with st.sidebar:
 
 # --- MAIN CHAT STAGE ---
 st.title("Advanced RAG Assistant")
+
+# Heartbeat check
+if not check_api_health():
+    st.warning("🔄 System is initializing (loading AI models)... Please wait a moment.")
+    time.sleep(3)
+    st.rerun()
+
 st.caption("Production pipeline with Hybrid Search + Reranking + Gemini 1.5")
 
 # Display history

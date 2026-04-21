@@ -38,6 +38,11 @@ def get_rag():
         rag_chain = RAGChain()
     return rag_chain
 
+@app.get("/health")
+def health_check():
+    """Simple endpoint for frontend heartbeats."""
+    return {"status": "healthy"}
+
 class QueryRequest(BaseModel):
     question: str
     skip_expansion: bool = False
@@ -106,5 +111,5 @@ def get_eval_metrics():
 
 if __name__ == "__main__":
     import uvicorn
-    # Use 127.0.0.1 for maximum local stability and to avoid IPv4/v6 conflicts
+    # Use 127.0.0.1 for internal container communication
     uvicorn.run(app, host="127.0.0.1", port=8000)
