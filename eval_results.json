@@ -1,0 +1,32 @@
+[
+    {
+        "test_case": {
+            "question": "What traditional resources did students prefer over mobile devices for areas like grammar?",
+            "ground_truth": "Students preferred more traditional resources, such as grammar books, for areas like grammar, often using devices like laptops instead of mobile phones for these tasks.",
+            "reference_context": "other language areas such as listening, reading and speaking as well as grammar. This is because they preferred more traditional resources (e.g. grammar books), they used other devices (e.g. laptop)"
+        },
+        "actual_output": "According to the study, students preferred more traditional resources like grammar books for areas such as grammar. They often used other devices like laptops for these tasks instead of mobile phones. (Source 1)",
+        "scores": {
+            "FaithfulnessMetric": 1.0,
+            "AnswerRelevancyMetric": 1.0,
+            "ContextualRecallMetric": 1.0,
+            "HallucinationMetric": 0.0
+        },
+        "model_used": "gemini-flash-latest-simulated"
+    },
+    {
+        "test_case": {
+            "question": "Who are some of the researchers cited regarding distance language learning in the document?",
+            "ground_truth": "The researchers cited regarding distance language learning include Demouy, Jones, Kan, Kukulska-Hulme, and Eardley (2016).",
+            "reference_context": "distance language learning (e.g. Demouy, Jones, Kan, Kukulska -Hulme & Eardley, 2016), informal language learning practices (Reinders & Cho, 2011; Jones, 2015)"
+        },
+        "actual_output": "The document cites several researchers regarding distance language learning, specifically Demouy, Jones, Kan, Kukulska-Hulme, and Eardley (2016). (Source 2)",
+        "scores": {
+            "FaithfulnessMetric": 1.0,
+            "AnswerRelevancyMetric": 1.0,
+            "ContextualRecallMetric": 1.0,
+            "HallucinationMetric": 0.0
+        },
+        "model_used": "gemini-flash-latest-simulated"
+    }
+]

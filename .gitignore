@@ -1,0 +1,26 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment Variables (Handle these in Render Dashboard)
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large Model Cache (Sentence-Transformers will re-download in Docker)
+# This keeps the repository small
+.cache/
+
+# NOTE: We are NOT ignoring qdrant_storage/ because we want 
+# the demo data to be baked into our portfolio showcase.
+# However, we DO ignore the temporary database lock files.
+qdrant_storage/.lock
+*.lock

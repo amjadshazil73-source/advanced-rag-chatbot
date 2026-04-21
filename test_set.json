@@ -1,0 +1,12 @@
+[
+    {
+        "question": "What traditional resources did students prefer over mobile devices for areas like grammar?",
+        "ground_truth": "Students preferred more traditional resources, such as grammar books, for areas like grammar, often using devices like laptops instead of mobile phones for these tasks.",
+        "reference_context": "other language areas such as listening, reading and speaking as well as grammar. This is because they preferred more traditional resources (e.g. grammar books), they used other devices (e.g. laptop)"
+    },
+    {
+        "question": "Who are some of the researchers cited regarding distance language learning in the document?",
+        "ground_truth": "The researchers cited regarding distance language learning include Demouy, Jones, Kan, Kukulska-Hulme, and Eardley (2016).",
+        "reference_context": "distance language learning (e.g. Demouy, Jones, Kan, Kukulska -Hulme & Eardley, 2016), informal language learning practices (Reinders & Cho, 2011; Jones, 2015)"
+    }
+]
