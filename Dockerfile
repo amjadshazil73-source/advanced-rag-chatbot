@@ -24,6 +24,7 @@ RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/wh
     pip install --no-cache-dir -r requirements.txt
 
 # Post-install: Warm up models to bake them into the image
+COPY warmup.py .
 RUN python warmup.py
 
 # Copy the entire project
