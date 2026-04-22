@@ -4,7 +4,7 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # Google Gemini
-    google_api_key: str
+    google_api_key: str = ""
     embedding_model: str = "models/text-embedding-001" 
     llm_model: str = "gemini-flash-latest"
 
