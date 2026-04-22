@@ -15,31 +15,20 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements file
+# Copy the requirements file and install dependencies
 COPY requirements.txt .
-
-# Install Python dependencies
-# We use the CPU-only version of torch to stay within Render's memory and disk limits
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu && \
-    pip install --no-cache-dir -r requirements.txt
-
-# Post-install: Warm up models to bake them into the image
-COPY warmup.py .
-RUN python warmup.py
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire project
-# This includes 'qdrant_storage' for our baked-in showcase data
 COPY . .
 
 # Expose the API and UI ports
 EXPOSE 8000
 EXPOSE 8501
 
-# Create a robust startup script
-# 1. Starts FastAPI on 8000 (Internal)
-# 2. Starts Streamlit on $PORT (Public - provided by Render)
+# Create a robust startup script (merged for memory efficiency)
 RUN echo '#!/bin/bash\n\
-uvicorn api:app --host 127.0.0.1 --port 8000 &\n\
+uvicorn api:app --host 0.0.0.0 --port 8000 &\n\
 streamlit run app.py --server.port $PORT --server.address 0.0.0.0\n\
 ' > start.sh && chmod +x start.sh
 

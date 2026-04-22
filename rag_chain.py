@@ -17,7 +17,7 @@ from config import settings
 from retriever import get_vector_store, hybrid_search, BM25Manager
 from prompt import format_context
 from query_transform import QueryTransformer
-from reranker import CrossEncoderReranker
+from reranker import GeminiReranker
 
 # --- Industry Standard: Observability Setup ---
 if settings.langchain_tracing_v2 and settings.langchain_api_key:
@@ -68,7 +68,7 @@ class RAGChain:
         
         # Advanced RAG Components
         self.query_transformer = QueryTransformer()
-        self.reranker = CrossEncoderReranker()
+        self.reranker = GeminiReranker()
         
         # Fallback list for production resilience
         self.fallback_models = [

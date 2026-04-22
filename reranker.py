@@ -1,31 +1,51 @@
+import json
 from typing import List
-from sentence_transformers import CrossEncoder
+from google import genai
 from langchain_core.documents import Document
 from loguru import logger
+from config import settings
 
-class CrossEncoderReranker:
-    def __init__(self, model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"):
-        logger.info(f"Loading local reranker model: {model_name}...")
-        self.model = CrossEncoder(model_name)
-    
+class GeminiReranker:
+    """
+    Cloud-based Reranker using Gemini 1.5 Flash.
+    Provides high-accuracy document ranking without local RAM overhead.
+    """
+    def __init__(self):
+        self.client = genai.Client(api_key=settings.google_api_key)
+        self.model = "gemini-1.5-flash"
+
     def rerank(self, query: str, documents: List[Document], top_n: int = 5) -> List[Document]:
-        """
-        Refines the initial retrieval results by re-scoring them with a Cross-Encoder.
-        """
         if not documents:
             return []
         
-        # Prepare pairs: (query, document_text)
-        pairs = [[query, doc.page_content] for doc in documents]
+        logger.info(f"Cloud-Reranking {len(documents)} documents using Gemini...")
         
-        # Get relevance scores
-        logger.info(f"Reranking {len(documents)} documents...")
-        scores = self.model.predict(pairs)
+        # Build prompt for LLM-based Reranking
+        doc_list = "\n".join([f"ID {i}: {doc.page_content[:400]}" for i, doc in enumerate(documents)])
+        prompt = f"""
+        Rate the following document snippets based on their relevance to the specific query: "{query}"
+        Answer with ONLY a JSON list of document IDs sorted by relevance (most relevant first).
+        Limit the output to a maximum of {top_n} IDs.
         
-        # Pair documents with their scores and sort
-        doc_scores = sorted(zip(documents, scores), key=lambda x: x[1], reverse=True)
+        Example Output: [3, 0, 2]
         
-        # Return top N re-ranked documents
-        reranked_docs = [doc for doc, score in doc_scores[:top_n]]
-        logger.info(f"Reranking complete. Selected top {len(reranked_docs)} results.")
-        return reranked_docs
+        Documents:
+        {doc_list}
+        """
+        
+        try:
+            response = self.client.models.generate_content(model=self.model, contents=prompt)
+            # Clean response text and parse JSON
+            cleaned_text = response.text.strip().replace("```json", "").replace("```", "")
+            ordered_ids = json.loads(cleaned_text)
+            
+            reranked_docs = []
+            for idx in ordered_ids:
+                if isinstance(idx, int) and idx < len(documents):
+                    reranked_docs.append(documents[idx])
+            
+            logger.info(f"Reranking complete. Selected {len(reranked_docs)} results.")
+            return reranked_docs[:top_n]
+        except Exception as e:
+            logger.error(f"Cloud Rerank failed: {e}. Falling back to original retrieval order.")
+            return documents[:top_n]
