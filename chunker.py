@@ -36,9 +36,9 @@ def semantic_chunker() -> SemanticChunker:
     Uses embedding similarity to detect topic-shift boundaries.
     Higher quality, but ~10x slower. Use for high-value documents.
     """
-    embeddings = OpenAIEmbeddings(
+    embeddings = GoogleGenerativeAIEmbeddings(
         model=settings.embedding_model,
-        api_key=settings.openai_api_key,
+        google_api_key=settings.google_api_key,
     )
     return SemanticChunker(
         embeddings,
