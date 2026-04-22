@@ -56,27 +56,31 @@ def load_all_chunks() -> List[Document]:
 
 class RAGChain:
     def __init__(self):
-        logger.info("Initializing Industry-Grade RAG chain...")
-        self.vector_store = get_vector_store()
-        all_docs = load_all_chunks()
-        
-        # Performance: Pre-build BM25 index on startup
-        self.bm25_manager = BM25Manager(all_docs)
-        
-        self.gemini = genai.Client(api_key=settings.google_api_key)
-        self.llm_model = settings.llm_model
-        
-        # Advanced RAG Components
-        self.query_transformer = QueryTransformer()
-        self.reranker = GeminiReranker()
-        
-        # Fallback list for production resilience
-        self.fallback_models = [
-            "gemini-flash-latest",
-            "gemini-2.0-flash",
-            "gemini-2.0-flash-lite-001"
-        ]
-        logger.info(f"RAG chain ready (Primary: {self.llm_model})")
+        try:
+            logger.info("Initializing Industry-Grade RAG chain...")
+            self.vector_store = get_vector_store()
+            all_docs = load_all_chunks()
+            
+            # Performance: Pre-build BM25 index on startup
+            self.bm25_manager = BM25Manager(all_docs)
+            
+            self.gemini = genai.Client(api_key=settings.google_api_key)
+            self.llm_model = settings.llm_model
+            
+            # Advanced RAG Components
+            self.query_transformer = QueryTransformer()
+            self.reranker = GeminiReranker()
+            
+            # Fallback list for production resilience
+            self.fallback_models = [
+                "gemini-flash-latest",
+                "gemini-2.0-flash",
+                "gemini-2.0-flash-lite-001"
+            ]
+            logger.info(f"RAG chain ready (Primary: {self.llm_model})")
+        except Exception as e:
+            logger.exception("CRITICAL: RAG Chain initialization failed!")
+            raise e
 
     def refresh(self):
         """Reloads document chunks and REBUILDS the BM25 index."""
