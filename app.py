@@ -150,7 +150,11 @@ if prompt := st.chat_input("Ask a question about your documents..."):
             with client.stream("POST", "/ask_stream", json={"question": prompt}) as r:
                 if r.status_code != 200:
                     error_text = r.read().decode()
-                    st.error(f"Chat failed (Backend Error): {error_text}")
+                    log_content = ""
+                    if os.path.exists("/app/api.log"):
+                        with open("/app/api.log", "r") as f:
+                            log_content = f.read()[-2000:]
+                    st.error(f"Chat failed (Backend Error): {error_text}\n\nAPI LOGS:\n{log_content}")
                     st.stop()
                 
                 for line in r.iter_lines():
