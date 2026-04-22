@@ -4,7 +4,7 @@ import json
 import time
 
 # --- CONFIGURATION ---
-API_URL = "http://127.0.0.1:8000"
+API_URL = "http://127.0.0.1:10001"
 TIMEOUT = 180.0 # Increased for complex RAG tasks
 
 st.set_page_config(
