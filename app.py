@@ -74,6 +74,14 @@ with st.sidebar:
         else:
             st.warning("Please select a file first.")
 
+    # 2. Baked-in Knowledge
+    st.subheader("📚 Knowledge Explorer")
+    st.info("The engine is pre-loaded with architecture documents.")
+    st.markdown("**Example Questions:**")
+    st.caption("- *What is the architecture of this project?*")
+    st.caption("- *How does the cloud-lite reranker work?*")
+    st.caption("- *How does it fit in 512MB RAM?*")
+
     st.markdown("---")
 
     # 2. Results Dashboard
@@ -143,7 +151,7 @@ if prompt := st.chat_input("Ask a question about your documents..."):
                 if r.status_code != 200:
                     error_text = r.read().decode()
                     st.error(f"Chat failed (Backend Error): {error_text}")
-                    return
+                    st.stop()
                 
                 for line in r.iter_lines():
                     if not line: continue
