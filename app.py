@@ -150,6 +150,10 @@ if prompt := st.chat_input("Ask a question about your documents..."):
             with client.stream("POST", "/ask_stream", json={"question": prompt}) as r:
                 if r.status_code != 200:
                     error_text = r.read().decode()
+                    if "API key" in error_text or "GOOGLE_API_KEY" in error_text:
+                        st.error("🔑 **API Key Missing!**\nPlease go to your **Render Dashboard** -> **Environment** and add: \n`GOOGLE_API_KEY` = `your_gemini_key_here`")
+                        st.stop()
+                    
                     log_content = ""
                     if os.path.exists("/app/api.log"):
                         with open("/app/api.log", "r") as f:
