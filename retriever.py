@@ -81,7 +81,11 @@ def dense_search(
     k: int = None,
 ) -> List[Document]:
     k = k or settings.top_k
-    return vector_store.similarity_search(query, k=k)
+    try:
+        return vector_store.similarity_search(query, k=k)
+    except Exception as e:
+        logger.warning(f"Dense search skipped: {e}")
+        return []
 
 def reciprocal_rank_fusion(
     dense_results: List[Document],

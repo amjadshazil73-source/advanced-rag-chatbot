@@ -148,6 +148,11 @@ if prompt := st.chat_input("Ask a question about your documents..."):
         try:
             # Use streaming API
             with client.stream("POST", "/ask_stream", json={"question": prompt}) as r:
+                if r.status_code != 200:
+                    error_text = r.read().decode()
+                    st.error(f"Chat failed (Backend Error): {error_text}")
+                    return
+                
                 for line in r.iter_lines():
                     if not line: continue
                     data = json.loads(line)
@@ -169,11 +174,20 @@ if prompt := st.chat_input("Ask a question about your documents..."):
             
             # Show sources after completion
             if sources:
-                with st.expander("View 8 Internal Sources"):
-                    for i, src in enumerate(sources):
-                        st.markdown(f"**Source {i+1}**")
-                        st.markdown(f"*{src['metadata'].get('source', 'Unknown')}*")
-                        st.markdown(f"```text\n{src['content'][:300]}...\n```")
+                # Add to history
+                st.session_state.messages.append({
+                    "role": "assistant", 
+                    "content": full_response,
+                    "sources": sources
+                })
+                
+                # Show sources after completion
+                if sources:
+                    with st.expander("View 8 Internal Sources"):
+                        for i, src in enumerate(sources):
+                            st.markdown(f"**Source {i+1}**")
+                            st.markdown(f"*{src['metadata'].get('source', 'Unknown')}*")
+                            st.markdown(f"```text\n{src['content'][:300]}...\n```")
 
         except Exception as e:
             st.error(f"Chat failed: {e}")
