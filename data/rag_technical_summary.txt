@@ -1,0 +1,20 @@
+# RAG Project Architecture: A Portfolio Showcase
+
+## Overview
+This Advanced RAG (Retrieval-Augmented Generation) Chatbot is a production-grade AI application designed for low-memory cloud deployment. It utilizes a multi-stage pipeline to provide accurate, context-aware answers from technical documents.
+
+## Technology Stack
+- **Frontend**: Streamlit for a fast, responsive user interface.
+- **Backend API**: FastAPI (Uvicorn) handling request routing and ingestion.
+- **LLM**: Google Gemini 1.5 Flash for reasoning and answer generation.
+- **Vector Database**: Qdrant (using a local persistent disk for "baked-in" knowledge).
+- **Reranker**: Cloud-Lite Gemini Reranker (LLM-as-a-Judge) which eliminates the need for 500MB+ local Cross-Encoder models.
+
+## The Retrieval Pipeline
+1. **Query Transformation**: The system uses HyDE (Hypothetical Document Embeddings) and Query Decomposition to expand user questions into multiple search perspectives.
+2. **Hybrid Search**: Combines Dense Vector Search (Gemini Embeddings) with BM25 Keyword Search (Rank-BM25) to ensure both semantic and keyword precision.
+3. **Multi-Stage Reranking**: Results are fused using Reciprocal Rank Fusion (RRF) and then pinpointed by a Gemini-based reranking layer.
+4. **Streaming Answers**: The system streams tokens back to the user for a low-latency, "ChatGPT-like" experience.
+
+## Deployment Strategy
+The app is optimized for Render's Free Tier (512MB RAM). By offloading heavy model compute to Google's API, the application maintains state-of-the-art performance while fitting into a lightweight Docker container.
