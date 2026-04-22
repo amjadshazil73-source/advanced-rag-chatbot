@@ -102,21 +102,13 @@ def check_api_health():
     try:
         # Internal loopback on port 10001
         response = httpx.get("http://127.0.0.1:10001/health", timeout=2.0)
-        return response.status_code == 200, "Healthy"
-    except Exception as e:
-        # Diagnostic: Try to read the internal api logs if they exist
-        log_content = ""
-        if os.path.exists("/app/api.log"):
-            with open("/app/api.log", "r") as f:
-                log_content = f.read()[-2000:] # Last 2000 chars
-        return False, f"{str(e)}\n\nAPI LOGS:\n{log_content}"
+        return response.status_code == 200
+    except:
+        return False
 
 # Heartbeat check
-is_healthy, error_msg = check_api_health()
-if not is_healthy:
+if not check_api_health():
     st.info("🔄 System is waking up...")
-    st.caption("Waiting for Backend API...")
-    st.error(f"Diagnostic Report:\n{error_msg}")
     time.sleep(5)
     st.rerun()
 

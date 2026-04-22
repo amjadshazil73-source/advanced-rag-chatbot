@@ -1,5 +1,4 @@
 import os
-print("🚀 API MODULE LOADING...")
 import shutil
 import tempfile
 from typing import List
