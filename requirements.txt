@@ -3,7 +3,10 @@ uvicorn
 streamlit
 httpx
 langchain
+langchain-community
 langchain-qdrant
+langchain-google-genai
+langchain-text-splitters
 qdrant-client
 google-genai
 python-dotenv
