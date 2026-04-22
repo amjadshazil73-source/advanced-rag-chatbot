@@ -38,10 +38,7 @@ def get_rag():
         rag_chain = RAGChain()
     return rag_chain
 
-@app.get("/health")
-def health_check():
-    """Simple endpoint for frontend heartbeats."""
-    return {"status": "healthy"}
+
 
 class QueryRequest(BaseModel):
     question: str

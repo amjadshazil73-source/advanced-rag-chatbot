@@ -13,13 +13,7 @@ st.set_page_config(
     layout="wide"
 )
 
-def check_api_health():
-    """Checks if the FastAPI backend is responsive."""
-    try:
-        response = httpx.get(f"{API_URL}/health", timeout=2.0)
-        return response.status_code == 200
-    except:
-        return False
+
 
 # --- STYLING ---
 st.markdown("""
@@ -103,10 +97,20 @@ with st.sidebar:
 # --- MAIN CHAT STAGE ---
 st.title("Advanced RAG Assistant")
 
+def check_api_health():
+    try:
+        # Use localhost for internal container routing
+        response = httpx.get("http://localhost:8000/health", timeout=2.0)
+        return response.status_code == 200, "Healthy"
+    except Exception as e:
+        return False, str(e)
+
 # Heartbeat check
-if not check_api_health():
+is_healthy, error_msg = check_api_health()
+if not is_healthy:
     st.info("🔄 System is waking up...")
-    time.sleep(2)
+    st.caption(f"Status: Waiting for Backend API... ({error_msg})")
+    time.sleep(3)
     st.rerun()
 
 st.caption("Production pipeline with Hybrid Search + Reranking + Gemini 1.5")
