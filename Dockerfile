@@ -23,12 +23,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose the API and UI ports
-EXPOSE 8000
+EXPOSE 10001
 EXPOSE 8501
 
-# Create a robust startup script (merged for memory efficiency)
+# Create a robust startup script
+# Using 127.0.0.1 for the background API on port 10001
 RUN echo '#!/bin/bash\n\
-uvicorn api:app --host 0.0.0.0 --port 8000 &\n\
+uvicorn api:app --host 127.0.0.1 --port 10001 & \n\
 streamlit run app.py --server.port $PORT --server.address 0.0.0.0\n\
 ' > start.sh && chmod +x start.sh
 

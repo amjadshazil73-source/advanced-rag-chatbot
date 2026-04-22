@@ -99,8 +99,8 @@ st.title("Advanced RAG Assistant")
 
 def check_api_health():
     try:
-        # Use localhost for internal container routing
-        response = httpx.get("http://localhost:8000/health", timeout=2.0)
+        # Internal loopback on port 10001
+        response = httpx.get("http://127.0.0.1:10001/health", timeout=2.0)
         return response.status_code == 200, "Healthy"
     except Exception as e:
         return False, str(e)
