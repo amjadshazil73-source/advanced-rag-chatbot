@@ -18,3 +18,4 @@ pydantic-settings
 numpy
 pypdf
 tiktoken
+python-multipart
