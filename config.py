@@ -5,7 +5,17 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # Google Gemini
-    google_api_key: str = os.getenv("GOOGLE_API_KEY", "")
+    google_api_key: str = (
+        os.getenv("GOOGLE_API_KEY") or 
+        os.getenv("GEMINI_API_KEY") or 
+        os.getenv("google_api_key") or 
+        ""
+    )
+    
+    # Debug: Help verify Render is passing variables
+    if not google_api_key:
+        print(f"DEBUG: Available Env Keys: {list(os.environ.keys())}")
+        
     embedding_model: str = "models/text-embedding-001" 
     llm_model: str = "gemini-flash-latest"
 
